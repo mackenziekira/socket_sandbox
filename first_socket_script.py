@@ -27,3 +27,13 @@ try:
     print 'socket connected to ' + host + ' on ip ' + remote_ip + ' port ' + str(port)
 except socket.error, msg:
     print 'failed to connect to server. error code: ' + str(msg[0]) + ' error message: ' + msg[1]
+
+message = "GET / HTTP/1.1\r\n\r\n"
+
+try:
+    s.sendall(message)
+except socket.error:
+    print 'failed to send'
+    sys.exit()
+
+print 'message sent!'
