@@ -11,8 +11,8 @@ except socket.error, msg:
 
 print 'socket created'
 
-host = 'www.github.com'
-port = 443
+host = 'www.google.com'
+port = 80
 
 try:
     remote_ip = socket.gethostbyname( host )
@@ -37,3 +37,8 @@ except socket.error:
     sys.exit()
 
 print 'message sent!'
+
+reply = s.recv(4096)
+print reply
+
+s.close()
