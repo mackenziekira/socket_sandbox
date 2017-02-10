@@ -26,3 +26,5 @@ def chatroom(ws):
             client.send(message)
         
     clients.remove(ws)
+
+    # gunicorn process that (connect) runs your flask code and lets you upgradge to websockets. (flask cannot run on websockets) 
