@@ -23,3 +23,15 @@ chats.start()
 @app.route('/')
 def hello():
     return render_template('index.html')
+
+@sockets.route('/submit')
+def inbox(ws):
+    """recieve incoming chat messages, insert them in redis"""
+    while not ws.closed:
+        gevent.sleep(0.1)
+        message = ws.recieve()
+
+    if message:
+        app.logger.info(u'Inserting message: {}'.format(message))
+        redis.publish(REDIS_CHAN, message)
+
