@@ -17,7 +17,9 @@ app.debug = 'DEBUG' in os.environ
 sockets = Sockets(app)
 redis = redis.from_url(REDIS_URL)
 
-
-
 chats = ChatBackend()
 chats.start()
+
+@app.route('/')
+def hello():
+    return render_template('index.html')
