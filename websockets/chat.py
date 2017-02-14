@@ -26,6 +26,7 @@ class ChatBackend(object):
         self.pubsub.subscribe(REDIS_CHAN)
 
     def __iter_data(self):
+        print 'im at iterdata'
         for message in self.pubsub.listen():
             data = message.get('data')
             if message['type'] == 'message':
@@ -34,23 +35,29 @@ class ChatBackend(object):
 
     def register(self, client):
         """register a client websocket connection for redis updates"""
+        print 'registered ', client
         self.clients.append(client)
 
     def send(self, client, data):
         """send data to client, or removes client from clients list if no longer a valid connection"""
         try:
+            print 'sending ', data, ' to ', client
             client.send(data)
         except Exception:
+            print 'removing ', client, data
             self.clients.remove(client)
 
     def run(self):
         """listen for new messages in redis, sends them to clients"""
+        print 'im at run'
         for data in self.__iter_data():
             for client in self.clients:
+                print 'running ', client, data
                 gevent.spawn(self.send, client, data)
 
     def start(self):
         """maintain redis subscription in background"""
+        print 'started chat backend'
         gevent.spawn(self.run)
 
 chats = ChatBackend()
@@ -66,14 +73,16 @@ def inbox(ws):
     while not ws.closed:
         gevent.sleep(0.1)
         message = ws.receive()
+        print 'inbox route got', message
 
     if message:
         app.logger.info(u'Inserting message: {}'.format(message))
         redis.publish(REDIS_CHAN, message)
 
-@sockets.route('/recieve')
+@sockets.route('/receive')
 def outbox(ws):
     """send outgoing chat messages via chatbackend instance"""
+    print 'outbox registered this ws client ', ws
     chats.register(ws)
 
     while not ws.closed:
