@@ -35,3 +35,10 @@ def inbox(ws):
         app.logger.info(u'Inserting message: {}'.format(message))
         redis.publish(REDIS_CHAN, message)
 
+@sockets.route('/recieve')
+def outbox(ws):
+    """send outgoing chat messages via chatbackend instance"""
+    chats.register(ws)
+
+    while not ws.closed:
+        gevent.sleep(0.1)
