@@ -69,7 +69,7 @@ def hello():
 
 @sockets.route('/submit')
 def inbox(ws):
-    """receive incoming chat messages, insert them in redis"""
+    """receive incoming chat messages, publish them in redis channel"""
     while not ws.closed:
         gevent.sleep(0.1)
         message = ws.receive()
