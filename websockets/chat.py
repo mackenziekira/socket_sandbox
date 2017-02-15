@@ -8,7 +8,7 @@ from flask import Flask, render_template
 from flask_sockets import Sockets
 from chat_class import ChatBackend
 
-REDIS_URL = 'redis://localhost:6379'
+REDIS_URL = os.environ['REDIS_URL']
 REDIS_CHAN = 'chat'
 
 app = Flask(__name__)
